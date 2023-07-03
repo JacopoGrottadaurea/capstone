@@ -6,6 +6,15 @@ router.post('/addgames', async (req, res) => {
   const { title, description, image, gallery, videoId, url, releaseDate, genres } = req.body;
 
   try {
+    // Verifica se esiste già un gioco con lo stesso titolo e descrizione
+    const existingGame = await GameModel.findOne({ title, description });
+    if (existingGame) {
+      res.status(400).send({
+        message: 'Esiste già un gioco con lo stesso titolo e descrizione'
+      });
+      return;
+    }
+
     const game = new GameModel({ title, description, image, gallery, videoId, url, releaseDate, genres });
     const newGame = await game.save();
     res.status(200).send({
@@ -18,6 +27,7 @@ router.post('/addgames', async (req, res) => {
     });
   }
 });
+
 
 router.get('/games', async (req, res) => {
   try {

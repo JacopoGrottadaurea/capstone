@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/users');
+const bcrypt = require('bcrypt');
 
 // Get - Ritorna tutti gli elementi "users"
 router.get('/users', async (req, res) => {
@@ -16,21 +17,23 @@ router.get('/users', async (req, res) => {
 
 // Post - Aggiunge un nuovo utente
 router.post('/users/register', async (req, res) => {
-  console.log('Received POST request to /users/register');
-  console.log('Request body:', req.body);
-
   const { username, email, password } = req.body;
 
   try {
-    const user = new UserModel({ username, email, password });
+    // Crittografa la password dell'utente
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Salva l'utente nel database con la password crittografata
+    const user = new UserModel({ username, email, password: hashedPassword });
     const newUser = await user.save();
-    console.log('New user saved to database:', newUser);
+
     res.status(200).send({
       message: "Nuovo utente registrato nel database",
       payload: newUser
     });
   } catch (error) {
-    console.error('Error saving new user to database:', error);
+    console.error(error);
     res.status(500).send({
       message: 'Errore interno del server'
     });

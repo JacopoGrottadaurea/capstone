@@ -6,20 +6,44 @@ const PORT = 5020;
 // Importa le route
 const usersRoute = require('./routes/users');
 const commentsRoute = require('./routes/comments');
-// Importa la route che definisce l'endpoint /addgames
 const gamesRoute = require('./routes/games');
+
+// Importa il modello Game
+const GameModel = require('./models/games');
 
 const app = express();
 
-// Middleware: permette di interpretare il body in formato json
 app.use(express.json());
 app.use(cors());
 
-// Routes
 app.use('/', usersRoute);
 app.use('/', commentsRoute);
-// Usa la route che definisce l'endpoint /addgames
 app.use('/', gamesRoute);
+
+// Aggiungi qui il nuovo endpoint per restituire i dati dei giochi
+app.get('/games', async (req, res) => {
+  try {
+    const games = await GameModel.find();
+    console.log('Dati dei giochi:', games); // Aggiungi questa riga
+    res.status(200).json(games);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Errore interno del server' });
+  }
+});
+
+// Aggiungi qui il nuovo endpoint per aggiornare i dati di un gioco
+app.patch('/games/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isFavorite } = req.body;
+    await GameModel.findOneAndUpdate({ _id: id }, { isFavorite });
+    res.status(200).send({ message: 'Gioco aggiornato correttamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Errore interno del server' });
+  }
+});
 
 mongoose.connect('mongodb+srv://peanut:Tx0tirhVkMyKLXMH@cluster0.srsr8rx.mongodb.net/', {
   useNewUrlParser: true,
@@ -33,5 +57,4 @@ db.once('open', () => {
   console.log('Database connesso correttamente');
 });
 
-// Mettiamo in ascolto express sulla nostra PORT
-app.listen(PORT, /* callback */ () => console.log(`Server avviato sulla porta ${PORT}`));
+app.listen(PORT, () => console.log(`Server avviato sulla porta ${PORT}`));
