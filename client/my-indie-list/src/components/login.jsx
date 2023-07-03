@@ -27,7 +27,7 @@ const LoginForm = () => {
       window.location.href = '/protected';
     } catch (error) {
       console.error(error);
-      // Gestisci gli errori di accesso (ad esempio, mostrando un messaggio all'utente)
+      // Gestisce gli errori di accesso (ad esempio, mostrando un messaggio all'utente)
     }
   }
 
