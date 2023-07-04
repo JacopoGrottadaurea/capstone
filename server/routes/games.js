@@ -40,6 +40,22 @@ router.get('/games', async (req, res) => {
   }
 });
 
+// Get - Cerca i giochi in base a una query di ricerca
+router.get('/search', async (req, res) => {
+  const { q } = req.query;
+
+  try {
+    // Cerca i giochi in base al titolo
+    const games = await GameModel.find({ title: new RegExp(q, 'i') });
+    res.status(200).json(games);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Errore interno del server' });
+  }
+});
+
+// Per trovare il singolo gioco
+
 router.get('/games/:_id', async (req, res) => {
   try {
     const { _id } = req.params;
@@ -57,6 +73,8 @@ router.get('/games/:_id', async (req, res) => {
     });
   }
 });
+
+// Gestione preferiti
 
 router.put('/games/:_id/unfavorite', async (req, res) => {
   try {

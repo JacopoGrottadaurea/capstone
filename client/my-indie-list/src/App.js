@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import DarkNavbar from './components/navbar';
-import MyCard from './components/card';
+import GamesPage from './components/gamepage';
 import WelcomePage from './components/welcome';
 import Footer from './components/footer';
 import Loader from './components/loader';
@@ -13,6 +13,7 @@ import Login from './components/login'
 import SignIn from './components/signin'
 import AddGameForm from './components/gameform';
 import FavoritesList from './components/favoritelist';
+import SearchPage from './components/searchpage';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +74,7 @@ const App = () => {
           <Route
             path="/games"
             element={
-              <MyCard
+              <GamesPage
                 onAddToFavorites={handleAddToFavorites}
                 onRemoveFromFavorites={handleRemoveFromFavorites}
                 games={games}
@@ -84,6 +85,7 @@ const App = () => {
           // Aggiungi qui la nuova route per il componente AddGameForm
           <Route path="/addgameform" element={<AddGameForm />} />
           <Route path="/game/:_id" element={<GameDetails />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path='/login' element={<Login />}/>
           <Route path='/sign-in' element={<SignIn />}/>
         </Routes>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Modal, Button } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Button, Modal } from 'react-bootstrap';
 import Loader from '../components/loader';
 import myLoader from '../assets/loader.gif';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,23 +7,13 @@ import { faCheck, faHeart as faRegularHeart, faInfoCircle } from '@fortawesome/f
 import { Link } from 'react-router-dom';
 import '../style/card.css';
 
-const DarkCard = ({ onAddToFavorites, onRemoveFromFavorites }) => {
-  const [games, setGames] = useState([]);
-  const [selectedGame, setSelectedGame] = useState(null);
+const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, setSelectedGame }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(game.isFavorite);
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const response = await fetch('http://localhost:5020/games');
-        const data = await response.json();
-        setGames(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchGames();
-  }, []);
+  if (!game) {
+    return null;
+  }
 
   const handleCardClick = (game) => {
     setSelectedGame(game);
@@ -39,63 +29,54 @@ const DarkCard = ({ onAddToFavorites, onRemoveFromFavorites }) => {
   };
 
   const handleButtonClick = async (game) => {
-    if (game.isFavorite) {
+    if (isFavorite) {
       onRemoveFromFavorites(game);
+      setIsFavorite(false);
     } else {
       try {
         const response = await fetch(`http://localhost:5020/games/${game._id}/favorite`, { method: 'PUT' });
         if (response.ok) {
-          // Aggiorna lo stato dei giochi per riflettere le modifiche
-          setGames((prevGames) =>
-            prevGames.map((g) => (g._id === game._id ? { ...g, isFavorite: true } : g))
-          );
+          onAddToFavorites(game);
+          setIsFavorite(true);
         }
       } catch (error) {
         console.error(error);
       }
     }
   };
-  
-  
-
-  const sortedCards = [...games].sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <>
-      <div className="card-container">
-        {sortedCards.map((game) => (
-          <Card key={game.title} bg="dark" text="white" className="w-25 m-2 game-card">
-            <div style={{ position: 'relative' }}>
-              <Card.Img variant="top" src={game.image} onClick={() => handleCardClick(game)} />
-              <Button
-                variant="dark"
-                onClick={() => handleButtonClick(game)}
-                disabled={game.isFavorite}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  backgroundColor: game.isFavorite ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
-                  border: game.isFavorite ? '1px solid rgba(255, 255, 255, 0.5)' : 'none',
-                }}
-              >
-                {game.isFavorite ? (
-                  <>
-                    <FontAwesomeIcon icon={faCheck} className="text-success" /> Added to your list
-                  </>
-                ) : (
-                  <FontAwesomeIcon icon={faRegularHeart} />
-                )}
-              </Button>
-            </div>
-            <Card.Body>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Card.Title onClick={() => handleCardClick(game)}>{game.title}</Card.Title>
-              </div>
-            </Card.Body>
-          </Card>
-        ))}
-      </div>
+      <Card bg="dark" text="white" className="m-2 game-card">
+        <div>
+          <Card.Img variant="top" src={game.image} onClick={() => handleCardClick(game)} />
+          <Button
+            variant="dark"
+            onClick={() => handleButtonClick(game)}
+            disabled={isFavorite}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              backgroundColor: isFavorite ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+              border: isFavorite ? '1px solid rgba(255, 255, 255, 0.5)' : 'none',
+            }}
+          >
+            {isFavorite ? (
+              <>
+                <FontAwesomeIcon icon={faCheck} className="text-success" /> Added to your list
+              </>
+            ) : (
+              <FontAwesomeIcon icon={faRegularHeart} />
+            )}
+          </Button>
+        </div>
+        <Card.Body>
+          <div >
+            <Card.Title onClick={() => handleCardClick(game)}>{game.title}</Card.Title>
+          </div>
+        </Card.Body>
+      </Card>
 
       {selectedGame && (
         <Modal show={true} onHide={handleModalClose} dialogClassName="modal-dark">
@@ -116,7 +97,7 @@ const DarkCard = ({ onAddToFavorites, onRemoveFromFavorites }) => {
             <p>{selectedGame.description}</p>
           </Modal.Body>
           <Modal.Footer style={{ justifyContent: 'center' }}>
-          <Link to={`/game/${selectedGame._id}`}>
+            <Link to={`/game/${selectedGame._id}`}>
               <Button variant="dark">
                 <FontAwesomeIcon icon={faInfoCircle} /> View Details
               </Button>
@@ -131,4 +112,4 @@ const DarkCard = ({ onAddToFavorites, onRemoveFromFavorites }) => {
   );
 };
 
-export default DarkCard;
+export default MyCard;

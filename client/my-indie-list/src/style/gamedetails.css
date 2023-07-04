@@ -18,6 +18,10 @@
   width: 100%;
 }
 
+.genres{
+  list-style: none;
+}
+
 .image-container::before {
   content: '';
   position: absolute;

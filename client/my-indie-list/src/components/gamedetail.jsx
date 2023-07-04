@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Carousel } from 'react-bootstrap'; // Importa il componente Carousel
+import { Carousel, Badge } from 'react-bootstrap'; // Importa i componenti Carousel e Badge
 import Comments from './comments';
 import '../style/gamedetails.css';
 
@@ -51,7 +51,11 @@ const GameDetails = () => {
               {game.gallery &&
                 game.gallery.map((image, index) => (
                   <Carousel.Item key={index}>
-                    <img src={image} alt={`Gallery image ${index + 1}`} />
+                    <img
+                      src={image}
+                      alt={`Gallery image ${index + 1}`}
+                      style={{ width: '560px', height: '315px' }}
+                    />
                   </Carousel.Item>
                 ))}
             </Carousel>
@@ -59,11 +63,15 @@ const GameDetails = () => {
         </div>
       </div>
       <p className="description">{game.description}</p>
-      {game.releaseDate && <p className="release-date">Data di rilascio: {game.releaseDate}</p>}
+      {game.releaseDate && (
+        <p className="release-date">Data di rilascio: {game.releaseDate.split('T')[0]}</p>
+      )}
       {game.genres && (
         <ul className="genres">
           {game.genres.map((genre, index) => (
-            <li key={index}>{genre}</li>
+            <li key={index}>
+              <Badge bg="secondary">{genre}</Badge>
+            </li>
           ))}
         </ul>
       )}

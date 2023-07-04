@@ -1,43 +1,44 @@
-// AddGameForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../style/gameform.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const AddGameForm = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
   const [gallery, setGallery] = useState([]);
   const [videoId, setVideoId] = useState('');
   const [url, setUrl] = useState('');
   const [releaseDate, setReleaseDate] = useState('');
   const [genres, setGenres] = useState([]);
   const [galleryFields, setGalleryFields] = useState([0]);
+  const [title, setTitle] = useState(''); // Imposta il valore iniziale come stringa vuota
+  const [description, setDescription] = useState(''); // Imposta il valore iniziale come stringa vuota
+  const [image, setImage] = useState('');
 
-  const indieGameGenres = ['Action', 'Adventure', 'Casual', 'Card Game', 'Horror', 'Multiplayer', 'Racing', 'RPG', 'Simulation', 'Sports', 'Strategy'];
+  const indieGameGenres = ['Action', 'Adventure', 'Casual', 'Card Game', 'Horror', 'Multiplayer', 'Noir', 'Pixel Art', 'Racing', 'RPG', 'Simulation', 'Sports', 'Strategy'];
+
+  const titleRef = useRef();
+  const descriptionRef = useRef();
+  const imageRef = useRef();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    console.log(title, description, image);
     let isValid = true;
     let errorMessage = 'Per favore, compila i seguenti campi obbligatori:';
-    if (!title) {
-      document.getElementById('title').classList.add('invalid');
-      errorMessage += '\n- Titolo';
+    if (!title || !description || !image) {
+      if (!title) {
+        titleRef.current.classList.add('invalid');
+        errorMessage += '\n- Titolo';
+      }
+      if (!description) {
+        descriptionRef.current.classList.add('invalid');
+        errorMessage += '\n- Descrizione';
+      }
+      if (!image) {
+        imageRef.current.classList.add('invalid');
+        errorMessage += '\n- Immagine';
+      }
       isValid = false;
-    }
-    if (!description) {
-      document.getElementById('description').classList.add('invalid');
-      errorMessage += '\n- Descrizione';
-      isValid = false;
-    }
-    if (!image) {
-      document.getElementById('image').classList.add('invalid');
-      errorMessage += '\n- Immagine';
-      isValid = false;
-    }
-    if (!isValid) {
       alert(errorMessage);
       return;
     }
@@ -52,8 +53,18 @@ const AddGameForm = () => {
       const data = await response.json();
       if (response.ok) {
         console.log(data);
+        // Ripristina lo stato iniziale del form
+        setTitle('');
+        setDescription('');
+        setImage('');
+        setGallery([]);
+        setVideoId('');
+        setUrl('');
+        setReleaseDate('');
+        setGenres([]);
+        setGalleryFields([0]);
       } else {
-        // Mostra un messaggio di errore se il gioco esiste già
+        // Mostra il messaggio di errore fornito dal server
         alert(data.message);
       }
     } catch (error) {
@@ -61,9 +72,16 @@ const AddGameForm = () => {
     }
   };
 
+
   const handleRemoveGalleryField = () => {
-    // Rimuovi l'ultimo campo dalla galleria
-    setGalleryFields(galleryFields.slice(0, -1));
+    // Verifica se ci sono più di due campi nella galleria
+    if (galleryFields.length > 2) {
+      // Rimuovi l'ultimo campo dalla galleria
+      setGalleryFields(galleryFields.slice(0, -1));
+    } else {
+      // Mostra un messaggio di errore
+      alert('Non possono esserci meno di due immagini nella galleria');
+    }
   };
 
 
@@ -75,13 +93,13 @@ const AddGameForm = () => {
     <div className="form-container">
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Titolo:</label>
-        <input type="text" id="title" value={title} onChange={event => setTitle(event.target.value)} required />
+        <input type="text" id="title" value={title} onChange={event => setTitle(event.target.value)} required ref={titleRef} />
         <br />
         <label htmlFor="description">Descrizione:</label>
-        <textarea id="description" value={description} onChange={event => setDescription(event.target.value)} required />
+        <textarea id="description" value={description} onChange={event => setDescription(event.target.value)} required ref={descriptionRef} />
         <br />
         <label htmlFor="image">Immagine:</label>
-        <input type="text" id="image" value={image} onChange={event => setImage(event.target.value)} required />
+        <input type="text" id="image" value={image} onChange={event => setImage(event.target.value)} required ref={imageRef} />
         <br />
         <div>Galleria:</div>
         {galleryFields.map((field, index) => (
@@ -121,10 +139,8 @@ const AddGameForm = () => {
         <div className="genres-container">
           {indieGameGenres.map(genre => (
             <div key={genre}>
-              <label htmlFor={`genre-${genre}`}>{genre}</label>
               <input
                 type="checkbox"
-                id={`genre-${genre}`}
                 value={genre}
                 checked={genres.includes(genre)}
                 onChange={event => {
@@ -135,6 +151,7 @@ const AddGameForm = () => {
                   }
                 }}
               />
+              <label>{genre}</label>
             </div>
           ))}
         </div>

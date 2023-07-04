@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import games from '../games/fetchinterest.json';
 import Loader from './loader';
 import myLoader from '../assets/loader.gif'
 
 function MyCarousel() {
+  const [games, setGames] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const lastThreeItems = games.slice(-3);
+
+  useEffect(() => {
+    // Recupera i dati dei giochi dal server
+    fetch('http://localhost:5020/games')
+      .then(response => response.json())
+      .then(data => setGames(data.slice(-3)))
+      .catch(error => console.error(error));
+  }, []);
 
   const handleImageLoad = () => {
     setImagesLoaded(true);
@@ -18,7 +25,7 @@ function MyCarousel() {
       {!imagesLoaded && <Loader src={myLoader} />}
       <div style={{ backgroundColor: '#343a40' }}>
         <Carousel interval={3000} controls={false} indicators={false}>
-          {lastThreeItems.map((game, index) => (
+          {games.map((game, index) => (
             <Carousel.Item key={index}>
               <div style={{ display: 'flex' }}>
                 <img
@@ -42,4 +49,3 @@ function MyCarousel() {
 }
 
 export default MyCarousel;
-
