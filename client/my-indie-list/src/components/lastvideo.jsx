@@ -6,7 +6,6 @@ import he from 'he';
 const LatestVideo = ({ channelId, playlistId }) => {
     const [video, setVideo] = useState(null);
     const [description, setDescription] = useState(null);
-    // Aggiungi una variabile di stato per tenere traccia dello stato di caricamento dei dati dall'API
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
