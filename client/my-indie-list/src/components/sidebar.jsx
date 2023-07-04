@@ -14,6 +14,7 @@ const Sidebar = ({ games, onRemoveFromFavorites }) => {
 
   const favorites = games.filter((game) => game.isFavorite);
 
+
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`} style={{ backgroundColor: '#171717', color: 'white' }}>
       <div

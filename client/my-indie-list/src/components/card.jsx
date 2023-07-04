@@ -9,7 +9,6 @@ import '../style/card.css';
 
 const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, setSelectedGame }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(game.isFavorite);
 
   if (!game) {
     return null;
@@ -29,15 +28,13 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
   };
 
   const handleButtonClick = async (game) => {
-    if (isFavorite) {
+    if (game.isFavorite) {
       onRemoveFromFavorites(game);
-      setIsFavorite(false);
     } else {
       try {
         const response = await fetch(`http://localhost:5020/games/${game._id}/favorite`, { method: 'PUT' });
         if (response.ok) {
           onAddToFavorites(game);
-          setIsFavorite(true);
         }
       } catch (error) {
         console.error(error);
@@ -53,16 +50,16 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
           <Button
             variant="dark"
             onClick={() => handleButtonClick(game)}
-            disabled={isFavorite}
+            disabled={game.isFavorite}
             style={{
               position: 'absolute',
               top: 0,
               right: 0,
-              backgroundColor: isFavorite ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
-              border: isFavorite ? '1px solid rgba(255, 255, 255, 0.5)' : 'none',
+              backgroundColor: game.isFavorite ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+              border: game.isFavorite ? '1px solid rgba(255, 255, 255, 0.5)' : 'none',
             }}
           >
-            {isFavorite ? (
+            {game.isFavorite ? (
               <>
                 <FontAwesomeIcon icon={faCheck} className="text-success" /> Added to your list
               </>
@@ -113,3 +110,4 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
 };
 
 export default MyCard;
+

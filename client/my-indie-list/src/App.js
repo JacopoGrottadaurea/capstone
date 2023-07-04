@@ -24,7 +24,7 @@ const App = () => {
     const fetchGames = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:5020/games');
+        const response = await fetch('http://localhost:5020/games'); // Assicurati che l'URL corrisponda all'URL del server in esecuzione
         if (!response.ok) {
           throw new Error(`Errore durante la richiesta al server: ${response.status}`);
         }
