@@ -30,11 +30,13 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
   const handleButtonClick = async (game) => {
     if (game.isFavorite) {
       onRemoveFromFavorites(game);
+      game.isFavorite = false;
     } else {
       try {
         const response = await fetch(`http://localhost:5020/games/${game._id}/favorite`, { method: 'PUT' });
         if (response.ok) {
           onAddToFavorites(game);
+          game.isFavorite = true;
         }
       } catch (error) {
         console.error(error);
@@ -51,6 +53,7 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
             variant="dark"
             onClick={() => handleButtonClick(game)}
             disabled={game.isFavorite}
+            className="heart-button"
             style={{
               position: 'absolute',
               top: 0,
@@ -67,6 +70,7 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
               <FontAwesomeIcon icon={faRegularHeart} />
             )}
           </Button>
+
         </div>
         <Card.Body>
           <div >

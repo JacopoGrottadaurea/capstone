@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from './card';
 
-function SearchBar() {
+function SearchBar(onAddToFavorites, onRemoveFromFavorites) {
   const [query, setQuery] = useState('');
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
@@ -38,7 +38,15 @@ function SearchBar() {
       <ul>
         {games.map(game => (
           <li key={game._id}>
-            <Card game={game} onClick={() => handleCardClick(game._id)} selectedGame={selectedGame} setSelectedGame={setSelectedGame} />
+            <Card
+              game={game}
+              onClick={() => handleCardClick(game._id)}
+              onAddToFavorites={onAddToFavorites}
+              onRemoveFromFavorites={onRemoveFromFavorites}
+              setGames={setGames}
+              selectedGame={selectedGame}
+              setSelectedGame={setSelectedGame}
+            />
           </li>
         ))}
       </ul>

@@ -22,7 +22,6 @@ const AddGameForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(title, description, image);
     let isValid = true;
     let errorMessage = 'Per favore, compila i seguenti campi obbligatori:';
     if (!title || !description || !image) {
@@ -91,7 +90,7 @@ const AddGameForm = () => {
 
   return (
     <div className="form-container">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <label htmlFor="title">Titolo:</label>
         <input type="text" id="title" value={title} onChange={event => setTitle(event.target.value)} required ref={titleRef} />
         <br />

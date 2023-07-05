@@ -85,9 +85,10 @@ const App = () => {
           // Aggiungi qui la nuova route per il componente AddGameForm
           <Route path="/addgameform" element={<AddGameForm />} />
           <Route path="/game/:_id" element={<GameDetails />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path='/login' element={<Login />}/>
-          <Route path='/sign-in' element={<SignIn />}/>
+          <Route path="/search" element={<SearchPage onAddToFavorites={handleAddToFavorites}
+            onRemoveFromFavorites={handleRemoveFromFavorites} setGames={setGames} />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/sign-in' element={<SignIn />} />
         </Routes>
         <Footer />
       </BrowserRouter>

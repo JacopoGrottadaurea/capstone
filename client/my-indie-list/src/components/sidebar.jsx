@@ -14,6 +14,10 @@ const Sidebar = ({ games, onRemoveFromFavorites }) => {
 
   const favorites = games.filter((game) => game.isFavorite);
 
+  const handleRemoveFromFavorites = (game) => {
+    onRemoveFromFavorites(game);
+    game.isFavorite = false;
+  };
 
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`} style={{ backgroundColor: '#171717', color: 'white' }}>
@@ -36,7 +40,7 @@ const Sidebar = ({ games, onRemoveFromFavorites }) => {
       {!isCollapsed && (
         <>
           {favorites.map((game) => (
-            <FavoriteGame key={game.title} game={game} onRemoveFromFavorites={onRemoveFromFavorites} />
+            <FavoriteGame key={game.title} game={game} onRemoveFromFavorites={handleRemoveFromFavorites} />
           ))}
         </>
       )}
