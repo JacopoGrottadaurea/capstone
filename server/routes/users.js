@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/users');
 const bcrypt = require('bcrypt');
+const authenticateToken = require('./middleware');
 
 // Get - Ritorna tutti gli elementi "users"
-router.get('/users', async (req, res) => {
+router.get('/users', authenticateToken, async (req, res) => {
   try {
     const users = await UserModel.find();
     res.status(200).send(users);
@@ -14,6 +15,31 @@ router.get('/users', async (req, res) => {
     });
   }
 });
+
+// Get - Restituisce i dati dell'utente corrente
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    // Recupera l'ID dell'utente dal token
+    const userId = req.user.userId;
+
+    // Cerca l'utente nel database
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: 'Utente non trovato' });
+    }
+
+    // Restituisce i dati dell'utente
+    res.status(200).send({
+      username: user.username,
+      email: user.email,
+      // Aggiungi qui eventuali altri dati che vuoi restituire
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Errore interno del server' });
+  }
+});
+
 
 // Post - Aggiunge un nuovo utente
 router.post('/users/register', async (req, res) => {
@@ -41,7 +67,7 @@ router.post('/users/register', async (req, res) => {
 });
 
 // patch - Modifica l'elemento, potendo selzionare la chiave specifica nel JSON (A differenza del put, che riscrive l'oggetto)
-router.patch('/users/patch/:id', async (req, res) => {
+router.patch('/users/patch/:id', authenticateToken, async (req, res) => {
   const { id } = req.params; // === const id = req.params.id
   const userExist = await UserModel.findById(id); // Ricordarsi di mettere sempre "id" nel metodo
 
@@ -69,7 +95,7 @@ router.patch('/users/patch/:id', async (req, res) => {
 });
 
 // Delete - Elimina l'utente secondo un ID
-router.delete('/users/delete/:id', async (req, res) => {
+router.delete('/users/delete/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {

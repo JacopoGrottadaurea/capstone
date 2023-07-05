@@ -15,18 +15,19 @@ router.post('/login', async (req, res) => {
       return res.status(401).send({ message: 'Nome utente o password non validi' });
     }
 
-    // Se l'accesso è stato effettuato con successo, genera un token
-    const payload = { userId: user._id };
-    const secret = 'your-secret-key';
-    const token = jwt.sign(payload, secret, { expiresIn: '14m' });
+    // Se l'accesso è stato effettuato con successo, genera un token di accesso
+    const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 
-    console.log(payload, secret, token)
+    // Genera un token di aggiornamento
+    const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
-    res.status(200).json({ token });
+    // Invia i token al client
+    res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: 'Errore interno del server' });
   }
 });
+
 
 module.exports = router;

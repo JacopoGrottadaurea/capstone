@@ -7,7 +7,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
       // Invia una richiesta POST al server con le credenziali dell'utente
       const response = await fetch('http://localhost:5020/login', {
@@ -18,18 +18,20 @@ const LoginForm = () => {
         body: JSON.stringify({ username, password })
       });
       const data = await response.json();
-
+  
       // Se l'accesso è stato effettuato con successo, salva il token nel client
       const token = data.token;
       localStorage.setItem('token', token);
-
+  
       // Reindirizza l'utente alla pagina protetta
       window.location.href = '/protected';
     } catch (error) {
       console.error(error);
-      // Gestisce gli errori di accesso (ad esempio, mostrando un messaggio all'utente)
+      // Gestisci gli errori di accesso (ad esempio, mostrando un messaggio all'utente)
     }
   }
+  
+  
 
   return (
     <div className="login-form-container">

@@ -9,7 +9,7 @@ const AddGameForm = () => {
   const [url, setUrl] = useState('');
   const [releaseDate, setReleaseDate] = useState('');
   const [genres, setGenres] = useState([]);
-  const [galleryFields, setGalleryFields] = useState([0]);
+  const [galleryFields, setGalleryFields] = useState([0, 1]);
   const [title, setTitle] = useState(''); // Imposta il valore iniziale come stringa vuota
   const [description, setDescription] = useState(''); // Imposta il valore iniziale come stringa vuota
   const [image, setImage] = useState('');
@@ -22,6 +22,7 @@ const AddGameForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(title, description, image);
     let isValid = true;
     let errorMessage = 'Per favore, compila i seguenti campi obbligatori:';
     if (!title || !description || !image) {
@@ -70,6 +71,7 @@ const AddGameForm = () => {
       console.error(error);
     }
   };
+
 
 
   const handleRemoveGalleryField = () => {

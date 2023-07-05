@@ -7,6 +7,7 @@ const PORT = 5020;
 const usersRoute = require('./routes/users');
 const commentsRoute = require('./routes/comments');
 const gamesRoute = require('./routes/games');
+const loginRoute = require('./routes/login');
 
 // Importa il modello Game
 const GameModel = require('./models/games');
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/', usersRoute);
 app.use('/', commentsRoute);
 app.use('/', gamesRoute);
+app.use('/', loginRoute);
 
 // Aggiungi qui il nuovo endpoint per restituire i dati dei giochi
 app.get('/games', async (req, res) => {
