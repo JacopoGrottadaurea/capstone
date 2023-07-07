@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import DarkNavbar from './components/navbar';
-import GamesPage from './components/gamepage';
-import WelcomePage from './components/welcome';
+import GamesPage from './pages/gamepage';
+import WelcomePage from './pages/welcome';
 import Footer from './components/footer';
 import Loader from './components/loader';
 import myLoader from './assets/loader.gif';
 import Sidebar from './components/sidebar';
-import GameDetails from './components/gamedetail';
-import SignIn from './components/signin'
-import AddGameForm from './components/gameform';
+import GameDetails from './pages/gamedetail';
+import SignIn from './forms/signin'
+import AddGameForm from './forms/gameform';
 import FavoritesList from './components/favoritelist';
-import SearchPage from './components/searchpage';
+import SearchPage from './pages/searchpage';
 import { ProtectedRouteProvider } from './components/protected';
 import { AuthProvider } from './components/authprovider'; // Importa il componente AuthProvider
-import Login from './components/login'; // Importa il componente LoginForm
+import Login from './forms/login'; // Importa il componente LoginForm
 import ProtectedPage from './components/protectedpage';
 
 const App = () => {

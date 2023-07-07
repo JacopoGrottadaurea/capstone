@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import MyCard from './card';
-import SearchBar from './searchbar';
+import MyCard from '../components/card';
+import SearchBar from '../components/searchbar';
 import '../style/searchpage.css';
 
 function SearchPage({ onAddToFavorites, onRemoveFromFavorites, setGames }) {

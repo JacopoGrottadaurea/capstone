@@ -8,6 +8,11 @@ const jwt = require('jsonwebtoken');
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
+  // Verifica se la richiesta contiene un nome utente e una password validi
+  if (!username || !password) {
+    return res.status(400).send({ message: 'Nome utente e password richiesti' });
+  }
+
   try {
     console.log('Accesso utente:', username);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import MyCard from './card';
+import MyCard from '../components/card';
 
 function GamesPage({ onAddToFavorites, onRemoveFromFavorites }) {
   const [games, setGames] = useState([]);

@@ -9,15 +9,24 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from './authprovider'; // Importa AuthContext
 
 function DarkNavBar() {
-  // Utilizza l'hook useContext per accedere ai dati e alle funzioni fornite da AuthProvider
-  const { accessToken, logout, username, profilepicture, fetchUserData } = useContext(AuthContext);
+  const [username, setUsername] = useState(null);
+  // Recupera il valore di username dalle props
+  const { accessToken, logout, fetchUserData } = useContext(AuthContext);
+  // Utilizza l'hook useState per memorizzare il nome utente e l'URL dell'immagine del profilo nello stato del componente
+
 
   useEffect(() => {
     if (accessToken) {
+      // Recupera il nome utente e l'URL dell'immagine del profilo dal localStorage
       fetchUserData();
-      console.log(profilepicture) // restituisce undefined
+      const username = localStorage.getItem('username');
+
+      console.log('Valore di username dal comonente LOGIN salvato nel localStorage:', username);
+      setUsername(username);
+      
+      // Aggiorna lo stato del componente con i valori recuperati dal localStorage
     }
-  }, [accessToken, fetchUserData]);
+  }, [accessToken]);
 
   const handleLogout = () => {
     // Utilizza la funzione logout fornita da AuthProvider
@@ -54,7 +63,9 @@ function DarkNavBar() {
         <div className="ml-auto">
           {accessToken ? (
             <>
-              <img src={profilepicture} alt={username} width={30} height={30} />
+              {/* {profileImage && (
+                <img src={profileImage} alt={username} width={30} height={30} />
+              )}*/}
               <span className="navbar-text">{username}</span>
               <Button variant="outline-light" className="ml-2" onClick={handleLogout}>Logout</Button>
             </>

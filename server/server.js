@@ -20,7 +20,6 @@ app.use('/', usersRoute);
 app.use('/', commentsRoute);
 app.use('/', gamesRoute);
 app.use('/', loginRoute);
-// app.use('/', loggedUser);
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Carousel from '../components/carousel';
-import LatestVideo from './lastvideo';
+import LatestVideo from '../components/lastvideo';
 import '../style/welcome.css';
 
 

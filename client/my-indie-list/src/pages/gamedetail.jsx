@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Carousel, Badge } from 'react-bootstrap'; // Importa i componenti Carousel e Badge
-import Comments from './comments';
+import Comments from '../components/comments';
 import '../style/gamedetails.css';
 
 const GameDetails = () => {
