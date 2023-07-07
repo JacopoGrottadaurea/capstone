@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
 import '../style/login.css';
+import { useContext } from 'react';
+import { AuthContext } from './authprovider';
 
 const LoginForm = () => {
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // console.log('Valori inseriti:', username, password);
   
     try {
-      // Invia una richiesta POST al server con le credenziali dell'utente
-      const response = await fetch('http://localhost:5020/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await response.json();
-  
-      // Se l'accesso è stato effettuato con successo, salva il token nel client
-      const token = data.token;
-      localStorage.setItem('token', token);
-  
-      // Reindirizza l'utente alla pagina protetta
+      // Utilizza la funzione login fornita da AuthProvider per autenticare l'utente
+      await login(username, password);
       window.location.href = '/protected';
     } catch (error) {
       console.error(error);
       // Gestisci gli errori di accesso (ad esempio, mostrando un messaggio all'utente)
     }
   }
-  
-  
 
   return (
     <div className="login-form-container">

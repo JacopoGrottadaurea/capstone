@@ -11,14 +11,15 @@ function authenticateToken(req, res, next) {
   }
 
   // Verifica il token utilizzando il segreto del token
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
     if (err) {
       return res.status(403).send({ message: 'Token non valido' });
     }
 
     // Se il token è valido, allega i dati decodificati alla richiesta e chiama il prossimo middleware
-    req.payload = payload;
-    next();
+req.user = payload;
+next();
+
   });
 }
 

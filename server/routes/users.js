@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/users');
 const bcrypt = require('bcrypt');
-const authenticateToken = require('./middleware');
+const authenticateToken = require('../middleware/authenticateToken');
 
 // Get - Ritorna tutti gli elementi "users"
 router.get('/users', authenticateToken, async (req, res) => {

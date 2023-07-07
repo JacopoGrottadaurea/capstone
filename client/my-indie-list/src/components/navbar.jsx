@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -6,40 +6,26 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
+import { AuthContext } from './authprovider'; // Importa AuthContext
 
 function DarkNavBar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [profilePicture, setProfilePicture] = useState('');
+  // Utilizza l'hook useContext per accedere ai dati e alle funzioni fornite da AuthProvider
+  const { accessToken, logout, username, profilepicture, fetchUserData } = useContext(AuthContext);
 
   useEffect(() => {
-    // Verifica se l'utente ha effettuato l'accesso
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-
-      // Recupera i dati dell'utente dal server
-      fetch('http://localhost:5020/me', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setUsername(data.username);
-          setProfilePicture(data.profilePicture);
-        });
+    if (accessToken) {
+      fetchUserData();
+      console.log(profilepicture) // restituisce undefined
     }
-  }, []);
+  }, [accessToken, fetchUserData]);
 
   const handleLogout = () => {
-    // Rimuovi il token dal client
-    localStorage.removeItem('token');
-  
+    // Utilizza la funzione logout fornita da AuthProvider
+    logout();
+
     // Reindirizza l'utente alla pagina di accesso
     window.location.href = '/login';
   }
-  
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky='top'>
@@ -66,9 +52,9 @@ function DarkNavBar() {
           </NavDropdown>
         </Nav>
         <div className="ml-auto">
-          {isLoggedIn ? (
+          {accessToken ? (
             <>
-              <img src={profilePicture} alt={username} width={30} height={30} />
+              <img src={profilepicture} alt={username} width={30} height={30} />
               <span className="navbar-text">{username}</span>
               <Button variant="outline-light" className="ml-2" onClick={handleLogout}>Logout</Button>
             </>
@@ -87,7 +73,5 @@ function DarkNavBar() {
     </Navbar>
   );
 }
-  
-
 
 export default DarkNavBar;

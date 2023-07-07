@@ -9,11 +9,14 @@ import Loader from './components/loader';
 import myLoader from './assets/loader.gif';
 import Sidebar from './components/sidebar';
 import GameDetails from './components/gamedetail';
-import Login from './components/login'
 import SignIn from './components/signin'
 import AddGameForm from './components/gameform';
 import FavoritesList from './components/favoritelist';
 import SearchPage from './components/searchpage';
+import { ProtectedRouteProvider } from './components/protected';
+import { AuthProvider } from './components/authprovider'; // Importa il componente AuthProvider
+import Login from './components/login'; // Importa il componente LoginForm
+import ProtectedPage from './components/protectedpage';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +27,7 @@ const App = () => {
     const fetchGames = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:5020/games'); // Assicurati che l'URL corrisponda all'URL del server in esecuzione
+        const response = await fetch('http://localhost:5020/games');
         if (!response.ok) {
           throw new Error(`Errore durante la richiesta al server: ${response.status}`);
         }
@@ -63,35 +66,39 @@ const App = () => {
 
   return (
     <>
-      <BrowserRouter>
-        <DarkNavbar />
-        <Sidebar games={games} onRemoveFromFavorites={handleRemoveFromFavorites} />
-        {isLoading && <Loader src={myLoader} />}
-        {error && <p>{error}</p>}
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<WelcomePage />} />
-          <Route
-            path="/games"
-            element={
-              <GamesPage
-                onAddToFavorites={handleAddToFavorites}
-                onRemoveFromFavorites={handleRemoveFromFavorites}
-                games={games}
-              />
-            }
-          />
-          <Route path="/favorites" element={<FavoritesList games={games} />} />
-          // Aggiungi qui la nuova route per il componente AddGameForm
-          <Route path="/addgameform" element={<AddGameForm />} />
-          <Route path="/game/:_id" element={<GameDetails />} />
-          <Route path="/search" element={<SearchPage onAddToFavorites={handleAddToFavorites}
-            onRemoveFromFavorites={handleRemoveFromFavorites} setGames={setGames} />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/sign-in' element={<SignIn />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+      <AuthProvider>
+      <ProtectedRouteProvider>
+        <BrowserRouter>
+          <DarkNavbar />
+          <Sidebar games={games} onRemoveFromFavorites={handleRemoveFromFavorites} />
+          {isLoading && <Loader src={myLoader} />}
+          {error && <p>{error}</p>}
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<WelcomePage />} />
+            <Route
+              path="/games"
+              element={
+                <GamesPage
+                  onAddToFavorites={handleAddToFavorites}
+                  onRemoveFromFavorites={handleRemoveFromFavorites}
+                  games={games}
+                />
+              }
+            />
+            <Route path="/protected" element={<ProtectedPage />} />
+            <Route path="/favorites" element={<FavoritesList games={games} />} />
+            <Route path="/addgameform" element={<AddGameForm />} />
+            <Route path="/game/:_id" element={<GameDetails />} />
+            <Route path="/search" element={<SearchPage onAddToFavorites={handleAddToFavorites}
+              onRemoveFromFavorites={handleRemoveFromFavorites} setGames={setGames} />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/sign-in' element={<SignIn />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+        </ProtectedRouteProvider>
+      </AuthProvider>
     </>
   );
 };
