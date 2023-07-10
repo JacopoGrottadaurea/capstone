@@ -1,24 +1,65 @@
 .card-container {
   margin-top: 20px;
   margin-bottom: 20px;
+  border-radius: 10px;
 }
 
 .game-card {
   width: 430px;
 }
 
-
-.game-card:hover {
-  cursor: pointer;
-  transform: scale(1.1);
-  transition: transform 0.2s;
-  z-index: 1;
-}
-
 .card-img-top {
   width: 100%;
   height: 200px;
   object-fit: cover;
+}
+
+.game-card-body {
+  position: absolute;
+  visibility: hidden !important;
+}
+
+.game-card:hover .game-card-body {
+  visibility: visible !important;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.heart-button {
+  position: absolute;
+  background: none;
+  border: none;
+  left: 90%;
+  top: 80%;
+}
+
+.heart-button {
+  position: absolute;
+  background: none;
+  border: none;
+  left: 90%;
+  top: 80%;
+}
+
+.heart-button:hover {
+  background: none;
+}
+
+.modal-title {
+  text-align: center;
+  margin: 10px;
+}
+
+.iframe-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.modal-footer {
+  justify-content: center;
 }
 
 .modal-dark .modal-content {
@@ -35,24 +76,16 @@
   height: 235px;
 }
 
-/* Aggiungi queste regole al tuo file CSS */
-.heart-button {
-  transition: transform 0.2s;
+.added-to-list {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid white;
+  position: absolute;
+  left: 60%;
+  top: 80%;
 }
 
-.heart-button:hover {
-  transform: scale(1.1);
-}
-
-.heart-button:active {
-  animation: spin 0.5s linear;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.added-to-list span{
+  margin-left: 8px;
 }

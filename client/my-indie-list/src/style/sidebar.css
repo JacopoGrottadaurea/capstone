@@ -13,40 +13,18 @@
     max-height: calc(7 * 80px);
     overflow: hidden;
     transition: transform 0.5s ease-in-out;
-}
-
-.sidebar.collapsed {
+  }
+  
+  .sidebar.collapsed {
     transform: translateY(92%);
-}
-
-.sidebar-title {
+  }
+  
+  .sidebar-title {
     margin-left: 15px;
-}
-
-.sidebar-collapse-button {
+  }
+  
+  .sidebar-collapse-button {
     background: none !important;
     border: none !important;
     margin-right: 5px;
-}
-
-.title-container {
-    display: inline-block;
-    white-space: nowrap;
-    cursor: pointer;
-    color: white;
-}
-
-.card:hover .scrolling-title span {
-    display: inline-block;
-    animation: scroll-left 5s linear infinite;
-}
-
-@keyframes scroll-left {
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(-100%);
-    }
-}
+  }

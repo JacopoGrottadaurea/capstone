@@ -3,17 +3,23 @@ import { Button, Form, ListGroup } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEllipsisV, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { useSession } from '../middleware/ProtectedRoutes';
+import '../style/comments.css'
 
 const Comments = ({ gameId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const inputRef = useRef(null);
 
+  const session = useSession();
+
   useEffect(() => {
-    fetch('/comments')
+    fetch(`http://localhost:5020/comments/${gameId}`)
       .then((response) => response.json())
-      .then((data) => setComments(data));
+      .then((data) => setComments(data))
+      .catch((error) => console.error('Si è verificato un errore:', error));
   }, []);
+
 
   const handleAddComment = () => {
     if (newComment.trim() === '') return;
@@ -24,7 +30,7 @@ const Comments = ({ gameId }) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        author: 'Nome autore',
+        author: `${session.username}`,
         text: newComment,
         post: gameId
       })
@@ -54,14 +60,15 @@ const Comments = ({ gameId }) => {
   };
 
   return (
-    <div style={{ textAlign: 'left' }}>
+    <div className="comments">
       <h3>Commenti</h3>
       <ListGroup>
         {comments.map((comment) => (
-          <ListGroup.Item key={comment._id} style={{ backgroundColor: '#343a40', border: "none", color: 'white' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>{comment.text}</div>
-              <Dropdown style={{ marginLeft: "10px" }}>
+          <ListGroup.Item key={comment._id} className="comment-item">
+            <div className='author'>{comment.author}</div>
+            <div className="comment-content">
+              <div className='text'>{comment.text}</div>
+              <Dropdown className="comment-dropdown">
                 <Dropdown.Toggle as="div" variant="none" id="dropdown-basic">
                   <FontAwesomeIcon icon={faEllipsisV} />
                 </Dropdown.Toggle>
@@ -75,7 +82,7 @@ const Comments = ({ gameId }) => {
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className="new-comment">
         <Form.Control
           ref={inputRef}
           className="textbar"
@@ -85,7 +92,7 @@ const Comments = ({ gameId }) => {
           onKeyDown={handleKeyDown}
           placeholder="Scrivi un commento..."
         />
-        <Button onClick={handleAddComment}>
+        <Button style={{marginLeft:"10px", borderRadius:"20px"}} onClick={handleAddComment}>
           <FontAwesomeIcon icon={faPaperPlane} />
         </Button>
       </div>

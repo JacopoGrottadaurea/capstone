@@ -104,48 +104,4 @@ app.patch('/games/:id', async (req, res) => {
 
 // Gestione preferiti
 
-router.put('/games/:_id/unfavorite', async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const game = await GameModel.findById(_id);
-    if (!game) {
-      res.status(404).send({
-        message: 'Gioco non trovato'
-      });
-    } else {
-      await GameModel.updateOne({ _id }, { isFavorite: false });
-      res.status(200).send({
-        message: 'Gioco rimosso dai preferiti'
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: 'Errore interno del server'
-    });
-  }
-});
-
-router.put('/games/:_id/favorite', async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const game = await GameModel.findById(_id);
-    if (!game) {
-      res.status(404).send({
-        message: 'Gioco non trovato'
-      });
-    } else {
-      await GameModel.updateOne({ _id }, { isFavorite: true });
-      res.status(200).send({
-        message: 'Gioco aggiunto ai preferiti'
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: 'Errore interno del server'
-    });
-  }
-});
-
-
-
 module.exports = router;

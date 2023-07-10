@@ -6,9 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faHeart as faRegularHeart, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import '../style/card.css';
+import { useSession } from '../middleware/ProtectedRoutes';
 
-const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, setSelectedGame }) => {
+const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, handleRemoveFromFavorites, userFavorites, selectedGame, setSelectedGame }) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const session = useSession()
 
   if (!game) {
     return null;
@@ -28,15 +31,20 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
   };
 
   const handleButtonClick = async (game) => {
-    if (game.isFavorite) {
-      onRemoveFromFavorites(game);
-      game.isFavorite = false;
+    if (userFavorites.includes(game._id)) {
+      onRemoveFromFavorites(game._id);
     } else {
       try {
-        const response = await fetch(`http://localhost:5020/games/${game._id}/favorite`, { method: 'PUT' });
+        const userId = session.userId;
+        const response = await fetch(`http://localhost:5020/users/${userId}/favorites`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ gameId: game._id })
+        });
         if (response.ok) {
-          onAddToFavorites(game);
-          game.isFavorite = true;
+          onAddToFavorites(game._id);
         }
       } catch (error) {
         console.error(error);
@@ -48,44 +56,40 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
     <>
       <Card bg="dark" text="white" className="m-2 game-card">
         <div>
-          <Card.Img variant="top" src={game.image} onClick={() => handleCardClick(game)} />
+          <Card.Img variant="top" src={game.image} />
+        </div>
+        <Card.Body className="game-card-body" onClick={() => handleCardClick(game)}>
+          <div >
+            <Card.Title >{game.title}</Card.Title>
+          </div>
+        </Card.Body>
+        {userFavorites.includes(game._id) ? (
+          <>
+            <div className="added-to-list">
+              <FontAwesomeIcon icon={faCheck} className="text-success" />
+              <span >Added to your list</span>
+            </div>
+          </>
+        ) : (
           <Button
             variant="dark"
             onClick={() => handleButtonClick(game)}
-            disabled={game.isFavorite}
-            className="heart-button"
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              backgroundColor: game.isFavorite ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
-              border: game.isFavorite ? '1px solid rgba(255, 255, 255, 0.5)' : 'none',
-            }}
+            disabled={userFavorites.includes(game._id)}
+            className='heart-button'
           >
-            {game.isFavorite ? (
-              <>
-                <FontAwesomeIcon icon={faCheck} className="text-success" /> Added to your list
-              </>
-            ) : (
-              <FontAwesomeIcon icon={faRegularHeart} />
-            )}
+            <FontAwesomeIcon icon={faRegularHeart} />
           </Button>
+        )}
 
-        </div>
-        <Card.Body>
-          <div >
-            <Card.Title onClick={() => handleCardClick(game)}>{game.title}</Card.Title>
-          </div>
-        </Card.Body>
       </Card>
 
       {selectedGame && (
         <Modal show={true} onHide={handleModalClose} dialogClassName="modal-dark">
-          <Modal.Title style={{ textAlign: 'center', margin: '10px' }}>{selectedGame.title}</Modal.Title>
+          <Modal.Title className="modal-title">{selectedGame.title}</Modal.Title>
           <Modal.Body>
             {isLoading && <Loader src={myLoader} />}
             {selectedGame.videoId && (
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+              <div className="iframe-container">
                 <iframe
                   className="embed-responsive-item"
                   src={`https://www.youtube.com/embed/${selectedGame.videoId}`}
@@ -97,8 +101,8 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
             )}
             <p>{selectedGame.description}</p>
           </Modal.Body>
-          <Modal.Footer style={{ justifyContent: 'center' }}>
-            <Link to={`/game/${selectedGame._id}`}>
+          <Modal.Footer className="modal-footer">
+            <Link to={`/game-details/${selectedGame._id}`}>
               <Button variant="dark">
                 <FontAwesomeIcon icon={faInfoCircle} /> View Details
               </Button>
@@ -114,4 +118,3 @@ const MyCard = ({ game, onAddToFavorites, onRemoveFromFavorites, selectedGame, s
 };
 
 export default MyCard;
-

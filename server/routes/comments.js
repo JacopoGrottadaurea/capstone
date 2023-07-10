@@ -12,6 +12,18 @@ router.get('/comments', async (req, res) => {
   }
 });
 
+// Get - Ritorna tutti i commenti del gioco specificato
+
+router.get('/comments/:post', async (req, res) => {
+  const gameId = req.params.post;
+  try {
+    const comments = await CommentModel.find({ post: gameId });
+    res.status(200).send(comments);
+  } catch (error) {
+    res.status(500).send({ message: 'Errore interno del server' });
+  }
+});
+
 // Post - Aggiunge un nuovo commento
 router.post('/comments/new', async (req, res) => {
   const comment = new CommentModel({

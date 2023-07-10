@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Carousel, Badge } from 'react-bootstrap'; // Importa i componenti Carousel e Badge
 import Comments from '../components/comments';
+import MyNavBar from '../components/navbar';
 import '../style/gamedetails.css';
+
 
 const GameDetails = () => {
   const [game, setGame] = useState(null);
   const { _id } = useParams();
-
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -29,6 +30,7 @@ const GameDetails = () => {
 
   return (
     <div className="game-details">
+      <MyNavBar />
       <div className="image-container">
         <img src={game.image} alt={game.title} />
         <div className="image-overlay">

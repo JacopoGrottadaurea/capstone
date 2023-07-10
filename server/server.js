@@ -9,6 +9,7 @@ const usersRoute = require('./routes/users');
 const commentsRoute = require('./routes/comments');
 const gamesRoute = require('./routes/games');
 const loginRoute = require('./routes/login');
+const userFavorites = require('./routes/userFavorite')
 // const loggedUser = require('./routes/loggeduser')
 
 const app = express();
@@ -20,6 +21,7 @@ app.use('/', usersRoute);
 app.use('/', commentsRoute);
 app.use('/', gamesRoute);
 app.use('/', loginRoute);
+app.use('/', userFavorites)
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

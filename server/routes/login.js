@@ -18,7 +18,8 @@ router.post('/login', async (req, res) => {
 
     // Verifica le credenziali dell'utente
     const user = await UserModel.findOne({ username });
-    console.log('Utente trovato:', user); // Aggiungi questa riga
+    console.log('Utente trovato:', user);
+    console.log('Profile picture:', user.profilepicture); 
 
     if (!user) {
       console.log('Utente non trovato:', username);
@@ -26,7 +27,7 @@ router.post('/login', async (req, res) => {
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-    console.log('Password corrispondente:', passwordMatch); // Aggiungi questa riga
+    console.log('Password corrispondente:', passwordMatch);
 
     if (!passwordMatch) {
       console.log('Password non valida:', username);
@@ -36,14 +37,12 @@ router.post('/login', async (req, res) => {
     console.log('Credenziali valide:', username);
 
     // Se l'accesso è stato effettuato con successo, genera un token di accesso
-    const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
+    const accessToken = jwt.sign({ userId: user._id, username: user.username, email: user.email, profilepicture: user.profilepicture }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
     console.log('Access token:', accessToken);
 
     // Genera un token di aggiornamento
     const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
     console.log('Refresh token:', refreshToken);
-
-    console.log('Token generati:', accessToken, refreshToken);
 
     // Invia i token al client
     res.status(200).json({ accessToken, refreshToken });
@@ -52,8 +51,5 @@ router.post('/login', async (req, res) => {
     res.status(500).send({ message: 'Errore interno del server' });
   }
 });
-
-
-
 
 module.exports = router;

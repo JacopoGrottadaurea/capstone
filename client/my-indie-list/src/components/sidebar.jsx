@@ -5,19 +5,22 @@ import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import '../style/sidebar.css';
 import FavoriteGame from './favoritegame';
 
-const Sidebar = ({ games, onRemoveFromFavorites }) => {
+
+const FavoriteBar = ({ games = [], userFavorites = [], onRemoveFromFavorites }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
+
+  console.log('userFavorites:', userFavorites);
+
+  const handleRemoveFromFavorites = (gameId) => {
+    onRemoveFromFavorites(gameId);
+  };
 
   const handleToggleCollapse = () => {
     setIsCollapsed((prevIsCollapsed) => !prevIsCollapsed);
   };
 
-  const favorites = games.filter((game) => game.isFavorite);
-
-  const handleRemoveFromFavorites = (game) => {
-    onRemoveFromFavorites(game);
-    game.isFavorite = false;
-  };
+  const favoriteGames = games.filter((game) => userFavorites.includes(game._id));
+  console.log('favoriteGames:', favoriteGames);
 
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`} style={{ backgroundColor: '#171717', color: 'white' }}>
@@ -28,7 +31,7 @@ const Sidebar = ({ games, onRemoveFromFavorites }) => {
           alignItems: 'center',
           position: 'sticky',
           top: 0,
-          zIndex: 1,
+          zIndex: 100,
           backgroundColor: '#171717',
         }}
       >
@@ -39,8 +42,8 @@ const Sidebar = ({ games, onRemoveFromFavorites }) => {
       </div>
       {!isCollapsed && (
         <>
-          {favorites.map((game) => (
-            <FavoriteGame key={game.title} game={game} onRemoveFromFavorites={handleRemoveFromFavorites} />
+          {favoriteGames.map((game) => (
+            <FavoriteGame key={game._id} game={game} onRemoveFromFavorites={handleRemoveFromFavorites} />
           ))}
         </>
       )}
@@ -48,4 +51,4 @@ const Sidebar = ({ games, onRemoveFromFavorites }) => {
   );
 };
 
-export default Sidebar;
+export default FavoriteBar;

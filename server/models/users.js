@@ -19,10 +19,19 @@ const UserSchema = new Schema({
   role: {
     type: String,
     required: false,
-    default: 'user'     // Viene impostato di default come user
+    default: 'user'
+  },
+  favorites: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Game'
+  }],
+  profilepicture: {
+    type: String,
+    required: false,
+    default: 'https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg'
   }
 });
 
-const User = mongoose.model('User', UserSchema);
 
+const User = mongoose.model('User', UserSchema);
 module.exports = User;

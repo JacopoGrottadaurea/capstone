@@ -1,23 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import '../style/login.css';
-import { useContext } from 'react';
-import { AuthContext } from '../components/authprovider';
 
 const LoginForm = () => {
-  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(null);
+  const [accessToken, setAccessTokenState] = useState(null);
+
+
+
+  const setAccessToken = (value) => {
+    setAccessTokenState(value);
+  };
+
+  const login = async (username, password) => {
+    console.log('Valori di username e password:', username, password);
+    try {
+      // Invia una richiesta POST al server con le credenziali dell'utente
+      const response = await fetch('http://localhost:5020/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: `${username}`,
+          password: `${password}`,
+        }),
+      });
+      const data = await response.json();
+      console.log('Dati ricevuti dal server:', data);
+      // Se l'accesso è stato effettuato con successo, salva i token nel client
+      const accessToken = data.accessToken;
+      const refreshToken = data.refreshToken;
+  
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        // Imposta il valore di accessToken nello stato del componente
+        setAccessToken(accessToken);
+      } else {
+        // Se il valore di accessToken è null, non salvare nulla nel localStorage e imposta il valore di accessToken su null
+        setAccessToken(null);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Reindirizza l'utente alla pagina /home
+      navigate('/home');
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // console.log('Valori inseriti:', username, password);
-  
     try {
-      // Utilizza la funzione login fornita da AuthProvider per autenticare l'utente
+      // Utilizza la funzione login
       await login(username, password);
-      // window.location.href = '/protected';
+
+      // Imposta il valore di isLoggedIn a true
+      setIsLoggedIn(true); 
       
     } catch (error) {
       console.error(error);
@@ -31,7 +81,7 @@ const LoginForm = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         {loginError && <p>{loginError}</p>}
-        <label htmlFor="username">Nome utente:</label><br />
+        <label htmlFor="username">Username:</label><br />
         <input
           type="text"
           id="username"
@@ -49,7 +99,9 @@ const LoginForm = () => {
           onChange={(event) => setPassword(event.target.value)}
           required
         /><br /><br />
-        <input type="submit" value="Accedi" />
+        <Button onClick={handleSubmit}>Login</Button>
+        <br />
+        <Link to="/register">Don't you have an account yet?</Link>
       </form>
     </div>
   );

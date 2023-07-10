@@ -5,7 +5,6 @@ import he from 'he';
 
 const LatestVideo = ({ channelId, playlistId }) => {
     const [video, setVideo] = useState(null);
-    const [description, setDescription] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -26,7 +25,6 @@ const LatestVideo = ({ channelId, playlistId }) => {
                     `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=AIzaSyDN5W6chBPUP8ztP9YbMwbjL9AfLfdNe10`
                 );
                 const videoData = await videoResponse.json();
-                setDescription(videoData.items[0].snippet.description);
             }
             // Imposta isLoading a false dopo aver caricato i dati dall'API
             setIsLoading(false);

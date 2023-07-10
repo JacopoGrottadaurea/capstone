@@ -2,8 +2,9 @@ import React, { useState, useRef } from 'react';
 import '../style/gameform.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { useSession } from '../middleware/ProtectedRoutes';
 
-const AddGameForm = () => {
+const GameForm = () => {
   const [gallery, setGallery] = useState([]);
   const [videoId, setVideoId] = useState('');
   const [url, setUrl] = useState('');
@@ -13,6 +14,9 @@ const AddGameForm = () => {
   const [title, setTitle] = useState(''); // Imposta il valore iniziale come stringa vuota
   const [description, setDescription] = useState(''); // Imposta il valore iniziale come stringa vuota
   const [image, setImage] = useState('');
+
+  const session = useSession();
+
 
   const indieGameGenres = ['Action', 'Adventure', 'Casual', 'Card Game', 'Horror', 'Multiplayer', 'Noir', 'Pixel Art', 'Racing', 'RPG', 'Simulation', 'Sports', 'Strategy'];
 
@@ -73,7 +77,6 @@ const AddGameForm = () => {
   };
 
 
-
   const handleRemoveGalleryField = () => {
     // Verifica se ci sono più di due campi nella galleria
     if (galleryFields.length > 2) {
@@ -84,7 +87,6 @@ const AddGameForm = () => {
       alert('Non possono esserci meno di due immagini nella galleria');
     }
   };
-
 
   const handleAddGalleryField = () => {
     setGalleryFields([...galleryFields, galleryFields.length]);
@@ -163,4 +165,4 @@ const AddGameForm = () => {
   );
 };
 
-export default AddGameForm;
+export default GameForm;

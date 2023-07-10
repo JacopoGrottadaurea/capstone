@@ -54,7 +54,7 @@ router.post('/users/register', async (req, res) => {
     const user = new UserModel({ username, email, password: hashedPassword });
     const newUser = await user.save();
 
-    res.status(200).send({
+    res.status(201).send({
       message: "Nuovo utente registrato nel database",
       payload: newUser
     });

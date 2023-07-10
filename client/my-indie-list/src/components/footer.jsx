@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faTwitter, faGoogle, faInstagram, faLinkedinIn, faGithub } from '@fortawesome/free-brands-svg-icons';
 
-const Footer = () => {
+const MyFooter = () => {
     return (
         <footer className="bg-dark text-white text-center text-lg-start">
             <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom border-light">
@@ -110,4 +110,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default MyFooter;

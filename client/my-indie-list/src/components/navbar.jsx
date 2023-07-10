@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import '../style/navbar.css'
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -6,34 +7,26 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
-import { AuthContext } from './authprovider'; // Importa AuthContext
+import { useSession } from '../middleware/ProtectedRoutes';
 
-function DarkNavBar() {
-  const [username, setUsername] = useState(null);
-  // Recupera il valore di username dalle props
-  const { accessToken, logout, fetchUserData } = useContext(AuthContext);
-  // Utilizza l'hook useState per memorizzare il nome utente e l'URL dell'immagine del profilo nello stato del componente
+function MyNavBar() {
+
+  const session = useSession();
 
 
-  useEffect(() => {
-    if (accessToken) {
-      // Recupera il nome utente e l'URL dell'immagine del profilo dal localStorage
-      fetchUserData();
-      const username = localStorage.getItem('username');
+  // Revoca Token
 
-      console.log('Valore di username dal comonente LOGIN salvato nel localStorage:', username);
-      setUsername(username);
-      
-      // Aggiorna lo stato del componente con i valori recuperati dal localStorage
-    }
-  }, [accessToken]);
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
 
   const handleLogout = () => {
     // Utilizza la funzione logout fornita da AuthProvider
     logout();
 
     // Reindirizza l'utente alla pagina di accesso
-    window.location.href = '/login';
+    window.location.href = '/home';
   }
 
   return (
@@ -49,34 +42,44 @@ function DarkNavBar() {
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="m-auto">
-          <Link to="/home" className="nav-link">Home</Link>
-          <Nav.Link href="/games" className="nav-link">Games</Nav.Link>
-          <Nav.Link href="/search" className="nav-link">Search</Nav.Link>
-          <NavDropdown title="More" id="basic-nav-dropdown">
-            <NavDropdown.Item href="/addgameform">Aggiungi gioco</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="/aboutus">About Us</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.4">Contact Us</NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
+        {session ? (
+          <Nav className="m-auto">
+            <Link to="/home" className="nav-link">Home</Link>
+            <Nav.Link href="/games" className="nav-link">Games</Nav.Link>
+            <Nav.Link href="/search" className="nav-link">Search</Nav.Link>
+            <NavDropdown className="navigation-dropdown" title="More" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/add-game">Aggiungi gioco</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="/aboutus">About Us</NavDropdown.Item>
+              <NavDropdown.Item href="#">Contact Us</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        ) : (
+          <Nav className="m-auto">
+            <Link to="/aboutus" className="nav-link">About Indie List!</Link>
+          </Nav>
+        )}
         <div className="ml-auto">
-          {accessToken ? (
+          {session ? (
             <>
-              {/* {profileImage && (
-                <img src={profileImage} alt={username} width={30} height={30} />
-              )}*/}
-              <span className="navbar-text">{username}</span>
-              <Button variant="outline-light" className="ml-2" onClick={handleLogout}>Logout</Button>
+              <div className="profile-container">
+                <img src={session.profilepicture} alt={session.username} width={30} height={30} />
+                <NavDropdown title={session.username} className="nav-dropdown-title" >
+                  <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              </div>
             </>
           ) : (
             <>
-              <Link to="/login">
-                <Button variant="outline-light" className="mr-2">Login</Button>
-              </Link>
-              <Link to="/sign-in">
-                <Button variant="outline-light">Registrati</Button>
-              </Link>
+              <div className="button-container">
+                <Link to="/login">
+                  <Button variant="outline-light" className="mr-2">Login</Button>
+                </Link>
+                <Link to="/register">
+                  <Button variant="outline-light" className="mr-2">Registrati</Button>
+                </Link>
+              </div>
             </>
           )}
         </div>
@@ -85,4 +88,4 @@ function DarkNavBar() {
   );
 }
 
-export default DarkNavBar;
+export default MyNavBar;
