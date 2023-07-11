@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import '../style/card.css';
 import { useSession } from '../middleware/ProtectedRoutes';
 
-const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, handleRemoveFromFavorites, userFavorites, selectedGame, setSelectedGame }) => {
+const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, userFavorites, selectedGame, setSelectedGame }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const session = useSession()
@@ -60,7 +60,7 @@ const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, handleRemoveFro
         </div>
         <Card.Body className="game-card-body" onClick={() => handleCardClick(game)}>
           <div >
-            <Card.Title >{game.title}</Card.Title>
+            <Card.Title className='card-game-title' >{game.title}</Card.Title>
           </div>
         </Card.Body>
         {userFavorites.includes(game._id) ? (

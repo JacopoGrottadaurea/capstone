@@ -1,0 +1,26 @@
+.carousel-control-next {
+    top: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.carousel-control-prev {
+    top: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.carousel-indicators {
+    bottom: -50px;
+}
+
+.carousel .row {
+    margin-left: 50px;
+    margin-right: 50px
+}
+
+.carousel .carousel-indicators button {
+    width: 10px;
+   height: 10px;
+   border-radius: 100%;
+ }

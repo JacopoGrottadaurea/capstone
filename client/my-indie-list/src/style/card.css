@@ -6,6 +6,7 @@
 
 .game-card {
   width: 430px;
+  overflow: hidden;
 }
 
 .card-img-top {
@@ -17,6 +18,7 @@
 .game-card-body {
   position: absolute;
   visibility: hidden !important;
+  overflow: hidden;
 }
 
 .game-card:hover .game-card-body {
@@ -27,24 +29,37 @@
   height: 100%;
 }
 
-.heart-button {
+.card-game-title {
   position: absolute;
-  background: none;
-  border: none;
-  left: 90%;
-  top: 80%;
+  top: -100%;
+  transition: top 0.3s;
+}
+
+.game-card:hover .card-game-title {
+  top: 0;
 }
 
 .heart-button {
   position: absolute;
+  bottom: -100%;
+  right: 0;
+  transition: bottom 0.3s;
   background: none;
   border: none;
-  left: 90%;
-  top: 80%;
+}
+
+.game-card:hover .heart-button {
+  bottom: 0;
 }
 
 .heart-button:hover {
   background: none;
+  border: none;
+}
+
+.heart-button:active {
+  background: none;
+  border: none;
 }
 
 .modal-title {
@@ -86,6 +101,6 @@
   top: 80%;
 }
 
-.added-to-list span{
+.added-to-list span {
   margin-left: 8px;
 }

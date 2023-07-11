@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import MyCard from '../components/card';
+import React, { useState, useEffect } from 'react';
 import MyNavBar from '../components/navbar';
 import FavoriteBar from '../components/sidebar';
 import { useSession } from '../middleware/ProtectedRoutes';
+import MyGameCarousel from '../components/gamecarousel';
 
 function GamesPage() {
   const [userFavorites, setUserFavorites] = useState([]);
@@ -56,33 +56,20 @@ function GamesPage() {
       console.error(error);
     }
   };
-
-  const sortedCards = useMemo(() => {
-    if (games) {
-      return [...games].sort((a, b) => a.title.localeCompare(b.title));
-    } else {
-      return [];
-    }
-  }, [games]);
+  
 
   return (
     <>
       <MyNavBar />
       <div>
-        <ul className='gamelist'>
-          {sortedCards.map(game => (
-            <li key={game._id}>
-              <MyCard
-                game={game}
-                userFavorites={userFavorites}
-                onAddToFavorites={handleAddToFavorites}
-                onRemoveFromFavorites={handleRemoveFromFavorites}
-                selectedGame={selectedGame}
-                setSelectedGame={setSelectedGame}
-              />
-            </li>
-          ))}
-        </ul>
+        <MyGameCarousel
+          games={games}
+          userFavorites={userFavorites}
+          handleAddToFavorites={handleAddToFavorites}
+          handleRemoveFromFavorites={handleRemoveFromFavorites}
+          selectedGame={selectedGame}
+          setSelectedGame={setSelectedGame}
+        />
       </div>
       <FavoriteBar
         games={games}
@@ -95,39 +82,3 @@ function GamesPage() {
 }
 
 export default GamesPage;
-
-
-
-/* function onRemoveFromFavorites(game) {
-  const token = localStorage.getItem('token');
-  fetch(`/games/${game._id}/unfavorite`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Aggiorna lo stato del frontend per riflettere le modifiche ai preferiti
-  })
-  .catch(error => {
-    console.error(error);
-  });
-}
-
-function onAddToFavorites(game) {
-  const token = localStorage.getItem('token');
-  fetch(`/games/${game._id}/favorite`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Aggiorna lo stato del frontend per riflettere le modifiche ai preferiti
-  })
-  .catch(error => {
-    console.error(error);
-  });
-}*/
