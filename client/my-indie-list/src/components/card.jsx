@@ -52,9 +52,11 @@ const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, userFavorites, 
     }
   };
 
+  console.log(setSelectedGame)
+
   return (
     <>
-      <Card bg="dark" text="white" className="m-2 game-card">
+      <Card bg="dark" text="white" className="m-2 game-card" onClick={() => handleCardClick(game)}>
         <div>
           <Card.Img variant="top" src={game.image} />
         </div>

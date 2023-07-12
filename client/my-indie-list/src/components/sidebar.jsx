@@ -9,8 +9,6 @@ import FavoriteGame from './favoritegame';
 const FavoriteBar = ({ games = [], userFavorites = [], onRemoveFromFavorites }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  console.log('userFavorites:', userFavorites);
-
   const handleRemoveFromFavorites = (gameId) => {
     onRemoveFromFavorites(gameId);
   };
@@ -20,7 +18,6 @@ const FavoriteBar = ({ games = [], userFavorites = [], onRemoveFromFavorites }) 
   };
 
   const favoriteGames = games.filter((game) => userFavorites.includes(game._id));
-  console.log('favoriteGames:', favoriteGames);
 
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`} style={{ backgroundColor: '#171717', color: 'white' }}>

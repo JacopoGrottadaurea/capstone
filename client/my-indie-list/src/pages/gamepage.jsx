@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import MyNavBar from '../components/navbar';
 import FavoriteBar from '../components/sidebar';
 import { useSession } from '../middleware/ProtectedRoutes';
@@ -17,28 +17,42 @@ function GamesPage() {
         const response = await fetch(`http://localhost:5020/games`);
         const data = await response.json();
         setGames(data);
+        console.log(data); // Aggiungi questa riga per il debug
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     const fetchFavorites = async () => {
       try {
         // Invia una richiesta al server per ottenere l'array dei preferiti dell'utente
         const userId = session.userId;
         const response = await fetch(`http://localhost:5020/users/${userId}/favorites`);
         const data = await response.json();
-
+  
         // Memorizza l'array dei preferiti nello stato del componente
         setUserFavorites(data.favorites);
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     fetchGames();
     fetchFavorites();
   }, []);
+  
+
+  const gamesByGenre = useMemo(() => {
+    const genres = [...new Set([].concat(...games.map(game => game.genres)))];
+    const result = {};
+    for (const genre of genres) {
+      result[genre] = games.filter(game => game.genres.includes(genre));
+    }
+    return result;
+  }, [games]);
+  
+  
+  
 
   const handleAddToFavorites = (gameId) => {
     setUserFavorites(favorites => [...favorites, gameId]);
@@ -56,14 +70,13 @@ function GamesPage() {
       console.error(error);
     }
   };
-  
 
   return (
     <>
       <MyNavBar />
       <div>
         <MyGameCarousel
-          games={games}
+          gamesByGenre={gamesByGenre}
           userFavorites={userFavorites}
           handleAddToFavorites={handleAddToFavorites}
           handleRemoveFromFavorites={handleRemoveFromFavorites}

@@ -9,6 +9,7 @@ import Login from "./forms/login";
 import GameForm from "./forms/gameform";
 import GameDetails from "./pages/gamedetail";
 import UserPage from "./pages/userpage";
+import SearchPage from "./pages/searchpage";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/profile" exact element={<UserPage />} />
           <Route path="/game-details/:_id" exact element={<GameDetails />} />
           <Route path="/add-game" exact element={<GameForm />} />
+          <Route path="/search" exact element={<SearchPage />} />
         </Route>
         
       </Routes>
