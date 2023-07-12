@@ -41,9 +41,9 @@ function GamesPage() {
     fetchFavorites();
   }, []);
   
-
   const gamesByGenre = useMemo(() => {
     const genres = [...new Set([].concat(...games.map(game => game.genres)))];
+    genres.sort(); // Ordina i generi alfabeticamente
     const result = {};
     for (const genre of genres) {
       result[genre] = games.filter(game => game.genres.includes(genre));
@@ -51,9 +51,6 @@ function GamesPage() {
     return result;
   }, [games]);
   
-  
-  
-
   const handleAddToFavorites = (gameId) => {
     setUserFavorites(favorites => [...favorites, gameId]);
   };

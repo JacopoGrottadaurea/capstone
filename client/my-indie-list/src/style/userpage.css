@@ -1,0 +1,12 @@
+.propic{
+    height: 150px;
+    width: 150px;
+    border: 2px solid white;
+}
+
+.user-profile-container {
+    padding: 30px;
+    background-color: rgb(78, 78, 78);
+    border-radius: 10px;
+    margin: 40px;
+}

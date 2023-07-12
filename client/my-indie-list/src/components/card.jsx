@@ -30,7 +30,9 @@ const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, userFavorites, 
     setIsLoading(false);
   };
 
-  const handleButtonClick = async (game) => {
+  const handleButtonClick = async (event, game) => {
+    event.stopPropagation(); 
+
     if (userFavorites.includes(game._id)) {
       onRemoveFromFavorites(game._id);
     } else {
@@ -51,6 +53,7 @@ const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, userFavorites, 
       }
     }
   };
+
 
   console.log(setSelectedGame)
 
@@ -75,12 +78,13 @@ const MyCard = ({ game, onRemoveFromFavorites, onAddToFavorites, userFavorites, 
         ) : (
           <Button
             variant="dark"
-            onClick={() => handleButtonClick(game)}
+            onClick={(event) => handleButtonClick(event, game)}
             disabled={userFavorites.includes(game._id)}
             className='heart-button'
           >
             <FontAwesomeIcon icon={faRegularHeart} />
           </Button>
+
         )}
 
       </Card>

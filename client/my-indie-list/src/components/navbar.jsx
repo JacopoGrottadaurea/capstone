@@ -13,6 +13,10 @@ function MyNavBar() {
 
   const session = useSession();
 
+  const checkRole = () => {
+    return session.role === 'admin';
+  }
+  
 
   // Revoca Token
 
@@ -48,8 +52,6 @@ function MyNavBar() {
             <Nav.Link href="/games" className="nav-link">Games</Nav.Link>
             <Nav.Link href="/search" className="nav-link">Search</Nav.Link>
             <NavDropdown className="navigation-dropdown" title="More" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/add-game">Aggiungi gioco</NavDropdown.Item>
-              <NavDropdown.Divider />
               <NavDropdown.Item href="/aboutus">About Us</NavDropdown.Item>
               <NavDropdown.Item href="#">Contact Us</NavDropdown.Item>
             </NavDropdown>
@@ -66,6 +68,7 @@ function MyNavBar() {
                 <img src={session.profilepicture} alt={session.username} width={30} height={30} />
                 <NavDropdown title={session.username} className="nav-dropdown-title" >
                   <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                  {checkRole() && <NavDropdown.Item href="/add-game">Aggiungi gioco</NavDropdown.Item>}
                   <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                 </NavDropdown>
               </div>

@@ -37,7 +37,7 @@ router.post('/login', async (req, res) => {
     console.log('Credenziali valide:', username);
 
     // Se l'accesso è stato effettuato con successo, genera un token di accesso
-    const accessToken = jwt.sign({ userId: user._id, username: user.username, email: user.email, profilepicture: user.profilepicture }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
+    const accessToken = jwt.sign({ userId: user._id, username: user.username, email: user.email, profilepicture: user.profilepicture, role: user.role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
     console.log('Access token:', accessToken);
 
     // Genera un token di aggiornamento
