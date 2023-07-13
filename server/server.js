@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+
+const path = require('path');
+
 const PORT = 5020;
 
 // Importa le route
@@ -13,6 +16,9 @@ const userFavorites = require('./routes/userFavorite')
 // const loggedUser = require('./routes/loggeduser')
 
 const app = express();
+
+app.use('/uploads', express.static(path.join(__dirname,'./uploads')))
+
 
 app.use(express.json());
 app.use(cors());

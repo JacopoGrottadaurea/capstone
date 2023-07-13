@@ -3,19 +3,19 @@ import { Outlet, useNavigate } from "react-router-dom";
 import jwt from 'jwt-decode'
 import Home from '../pages/welcome'
 
-const useAuth = () => {
+export const useAuth = () => {
     return localStorage.getItem('accessToken')?.toString()
 }
 
 export const useSession = () => {
     const session = useAuth();
-    
+
     const decodedSession = session ? jwt(session) : null
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!session) {
-            navigate('/home', {replace: true})
+            navigate('/home', { replace: true })
         }
     }, [navigate, session])
 

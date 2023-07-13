@@ -2,7 +2,6 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 
 const FavoritesList = ({ games }) => {
-  console.log('Giochi ricevuti come prop:', games); // Aggiungi questa riga
   const favorites = games.filter((game) => game.isFavorite);
 
   return (

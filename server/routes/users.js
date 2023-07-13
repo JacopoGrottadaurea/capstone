@@ -2,7 +2,13 @@ const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/users');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
 const authenticateToken = require('../middleware/authenticateToken');
+const { EventEmitter } = require('events');
+const emitter = new EventEmitter();
+
+
+emitter.setMaxListeners(20);
 
 // Get - Ritorna tutti gli elementi "users"
 router.get('/users', authenticateToken, async (req, res) => {
@@ -16,29 +22,16 @@ router.get('/users', authenticateToken, async (req, res) => {
   }
 });
 
-// Get - Restituisce i dati dell'utente corrente
-router.get('/me', authenticateToken, async (req, res) => {
+router.get('/user/:id', async (req, res) => {
   try {
-    // Recupera l'ID dell'utente dal token
-    const userId = req.user.userId;
-
-    // Cerca l'utente nel database
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      return res.status(404).send({ message: 'Utente non trovato' });
-    }
-
-    // Restituisce i dati dell'utente
-    res.status(200).send({
-      username: user.username,
-      email: user.email,
-      // Aggiungi qui eventuali altri dati che vuoi restituire
-    });
+    const user = await UserModel.findById(req.params.id);
+    res.json(user);
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: 'Errore interno del server' });
   }
 });
+
 
 
 // Post - Aggiunge un nuovo utente
@@ -114,6 +107,43 @@ router.delete('/users/delete/:id', authenticateToken, async (req, res) => {
     res.status(500).send({
       message: 'Errore interno del server'
     });
+  }
+});
+
+// Upload immagini
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'C:/Users/JGrottadaurea/Desktop/Servers/MyIndieList/server/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.png')
+  }
+})
+
+const upload = multer({ storage: storage });
+
+router.post('/upload', authenticateToken, upload.single('image'), async (req, res) => {
+
+
+  const url = req.protocol + '://' + req.get('host')
+
+
+  try {
+    const imageUrl = `${url}/uploads/${req.file.filename}`;
+
+    // Recupera l'ID dell'utente dal token
+    const userId = req.user.userId;
+
+    // Aggiorna il valore del campo profilepicture nel database
+    await UserModel.updateOne(
+      { _id: userId },
+      { $set: { profilepicture: imageUrl } }
+    );
+
+    res.send(imageUrl);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Errore interno del server' });
   }
 });
 
