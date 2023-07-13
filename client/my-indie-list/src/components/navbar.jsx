@@ -16,7 +16,26 @@ function MyNavBar() {
   const checkRole = () => {
     return session.role === 'admin';
   }
+
+  const [profilePicture, setProfilePicture] = useState(null);
+
+  useEffect(() => {
+    if (session) {
+      fetch(`http://localhost:5020/user/${session.userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')?.toString()}`
+        }
+      })
+        .then(response => response.json())
+        .then(user => {
+          setProfilePicture(user.profilepicture);
+        })
+        .catch(error => console.error(error));
+    }
+  }, [session]);
   
+
 
   // Revoca Token
 
@@ -65,7 +84,7 @@ function MyNavBar() {
           {session ? (
             <>
               <div className="profile-container">
-                <img src={session.profilepicture} alt={session.username} width={30} height={30} />
+                <img src={profilePicture} alt={session.username} width={30} height={30} />
                 <NavDropdown title={session.username} className="nav-dropdown-title" >
                   <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
                   {checkRole() && <NavDropdown.Item href="/add-game">Aggiungi gioco</NavDropdown.Item>}
