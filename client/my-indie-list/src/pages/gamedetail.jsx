@@ -64,22 +64,23 @@ const GameDetails = () => {
           )}
         </div>
       </div>
-      <p className="description">{game.description}</p>
-      {game.releaseDate && (
-        <p className="release-date">Data di rilascio: {game.releaseDate.split('T')[0]}</p>
-      )}
-      {game.genres && (
-        <ul className="genres">
-          {game.genres.map((genre, index) => (
-            <li key={index}>
-              <Badge bg="secondary">{genre}</Badge>
-            </li>
-          ))}
-        </ul>
-      )}
-      <a href={game.url} className="steam-button">
-        <i className="fab fa-steam"></i>
-      </a>
+      <div className='games-info mx-auto text-center'>
+        <p className="description">{game.description}</p>
+        {game.releaseDate && (
+          <p className="release-date">Data di rilascio: {game.releaseDate.split('T')[0]}</p>
+        )}
+        {game.genres && (
+          <div className="d-flex justify-content-center">
+            <ul className="genres list-inline">
+              {game.genres.map((genre, index) => (
+                <li key={index} className="list-inline-item">
+                  <Badge bg="secondary">{genre}</Badge>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
       <Comments gameId={game._id} />
     </div>
   );

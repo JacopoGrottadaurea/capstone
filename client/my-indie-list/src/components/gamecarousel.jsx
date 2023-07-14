@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Carousel, Row, Col } from 'react-bootstrap';
 import MyCard from './card';
 import '../style/gamecarousel.css'
@@ -18,7 +18,7 @@ function MyGameCarousel({ gamesByGenre, userFavorites, handleAddToFavorites, han
   
           return (
             <div className='games-carousel' key={genre}>
-              <h2>{genre} Games</h2>
+              <h2 style={{ marginLeft: '80px', marginBottom: '30px'}}>{genre} Games</h2>
               <Carousel>
                 {chunks.map((chunk, index) => (
                   <Carousel.Item key={index}>

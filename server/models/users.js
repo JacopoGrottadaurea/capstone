@@ -29,9 +29,12 @@ const UserSchema = new Schema({
     type: String,
     required: false,
     default: 'https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg'
+  },
+  description: {
+    type: String,
+    required: false
   }
 });
-
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

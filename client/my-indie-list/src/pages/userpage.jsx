@@ -64,15 +64,23 @@ function UserPage() {
             <div className='user-profile-container'>
                 <Container>
                     <Row className="mt-3">
-                        <Col xs={12} md={4}>
+                        <Col xs={12} className="d-flex justify-content-center mb-3">
                             <Image className='propic' src={profilePicture} roundedCircle />
                             <Button className="pencil-button" onClick={() => setShowModal(true)}>
                                 <FontAwesomeIcon icon={faPencilAlt} />
                             </Button>
                         </Col>
-                        <Col xs={12} md={4}>
-                            <div>
+                        <Col xs={12}>
+                            <div className='username-description text-center'>
                                 <h2>{session.username}</h2>
+                                <blockquote className="blockquote mb-0">
+                                    <p>
+                                        {' '}{session.description}{' '}
+                                    </p>
+                                    <footer className="blockquote-footer">
+                                        Have a nice gaming, <cite title="Source Title">Staff</cite>
+                                    </footer>
+                                </blockquote>
                             </div>
                         </Col>
                     </Row>

@@ -70,14 +70,10 @@ function MyNavBar() {
             <Link to="/home" className="nav-link">Home</Link>
             <Nav.Link href="/games" className="nav-link">Games</Nav.Link>
             <Nav.Link href="/search" className="nav-link">Search</Nav.Link>
-            <NavDropdown className="navigation-dropdown" title="More" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/aboutus">About Us</NavDropdown.Item>
-              <NavDropdown.Item href="#">Contact Us</NavDropdown.Item>
-            </NavDropdown>
           </Nav>
         ) : (
           <Nav className="m-auto">
-            <Link to="/aboutus" className="nav-link">About Indie List!</Link>
+            <Link to="/home" className="nav-link">Welcome!</Link>
           </Nav>
         )}
         <div className="ml-auto">
